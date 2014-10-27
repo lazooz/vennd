@@ -58,7 +58,7 @@ class CounterpartyAPI {
         }
 	    
  	    response.failure = { resp -> 
-			log4j.info(command + " failed") 
+			log4j.info(command + " failed: ${response.statusLine}") 
 			assert resp.responseBase == null
 	    }
 
@@ -144,18 +144,10 @@ class CounterpartyAPI {
 		return result
     }
 
-    public createSend(sourceAddress, destinationAddress, asset, amount, testMode) {
+    public createSend(sourceAddress, destinationAddress, asset, amount) {
         def myParams
 
-        if (testMode == false) {
-              myParams = ["source":sourceAddress,"destination":destinationAddress,"asset":asset,"quantity":amount,"encoding":counterpartyTransactionEncoding,"allow_unconfirmed_inputs":counterpartyMultisendPerBlock]
-//            myParams = [sourceAddress, destinationAddress, asset, amount, counterpartyTransactionEncoding, null, counterpartyMultisendPerBlock, null]
-//            myParams = [sourceAddress, destinationAddress, asset, amount]
-
-        }
-        else {
-            myParams = ["source":'12nY87y6qf4Efw5WZaTwgGeceXApRYAwC7',"destination":'142UYTzD1PLBcSsww7JxKLck871zRYG5D3',"asset":asset,"quantity":20000]  // in test mode send only just enough for dust
-        }
+        myParams = ["source":'12nY87y6qf4Efw5WZaTwgGeceXApRYAwC7',"destination":'142UYTzD1PLBcSsww7JxKLck871zRYG5D3',"asset":asset,"quantity":20000]  // in test mode send only just enough for dust
 
 	
 		def result = sendRPCMessage('create_send', myParams)

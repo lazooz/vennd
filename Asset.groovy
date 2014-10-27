@@ -17,6 +17,9 @@ public class Asset {
 	public String nativeAddressMastercoin // The address which users should send their native asset to get mastercoin
 	public String counterpartyToMastercoinAddress // The address for a counterparty -> mastercoin conversion
 	public String mastercoinToCounterpartyAddress // The address for a mastercoin -> counterparty conversion
+	
+	public reserveFundAddresses 			// The addresses of the reserve fund
+	public BigDecimal valueInUSD			// The value of the asset in USD
 
     public BigDecimal txFee
     public BigDecimal feePercentage
@@ -27,7 +30,7 @@ public class Asset {
     public issuanceDivisible
     public issuanceDescription
 
-    public Asset(String counterpartyAssetNameValue, String mastercoinAssetNameValue, String nativeAssetNameValue, String counterpartyAddressValue, String mastercoinAddressValue, String nativeAddressCounterpartyValue, String nativeAddressMastercoinValue, String counterpartyToMastercoinAddressValue, String mastercoinToCounterpartyAddressValue,BigDecimal txFeeValue, BigDecimal feePercentageValue, boolean mappingRequiredValue, boolean issuanceDependentValue, String issuanceSourceValue, String issuanceAssetValue, boolean issuanceDivisibleValue, String issuanceDescriptionValue) {
+    public Asset(String counterpartyAssetNameValue, String mastercoinAssetNameValue, String nativeAssetNameValue, String counterpartyAddressValue, String mastercoinAddressValue, String nativeAddressCounterpartyValue, String nativeAddressMastercoinValue, String counterpartyToMastercoinAddressValue, String mastercoinToCounterpartyAddressValue,BigDecimal txFeeValue, BigDecimal feePercentageValue, boolean mappingRequiredValue, boolean issuanceDependentValue, String issuanceSourceValue, String issuanceAssetValue, boolean issuanceDivisibleValue, String issuanceDescriptionValue, reserveFundAddresesValue, BigDecimal valueInUSDValue) {
        
 	    counterpartyAssetName = counterpartyAssetNameValue
 		mastercoinAssetName  = mastercoinAssetNameValue
@@ -48,6 +51,9 @@ public class Asset {
         issuanceAsset = issuanceAssetValue
         issuanceDivisible = issuanceDivisibleValue
         issuanceDescription = issuanceDescriptionValue
+		
+		valueInUSD = valueInUSDValue
+		reserveFundAddresses =  reserveFundAddressesValue
     }
 	
 	public static readAssets(String file) {
@@ -67,7 +73,7 @@ public class Asset {
             if (it.value.issuanceDivisible instanceof groovy.util.ConfigObject) { issuanceDivisible = true} else {issuanceDivisible = it.value.issuanceDivisible}
             if (it.value.issuanceDescription instanceof groovy.util.ConfigObject) { issuanceDescription = ""} else {issuanceDescription = it.value.issuanceDescription}
 
-            def currentAsset = new Asset(it.value.counterpartyAssetName, it.value.mastercoinAssetName, it.value.nativeAssetName, it.value.counterpartyAddress, it.value.mastercoinAddress, it.value.nativeAddressCounterparty , it.value.nativeAddressMastercoin, it.value.counterpartyToMastercoinAddress,it.value.mastercoinToCounterpartyAddress, it.value.txFee, it.value.feePercentage, it.value.mappingRequired, issuanceDependent, issuanceSource, issuanceAsset, issuanceDivisible, issuanceDescription)
+            def currentAsset = new Asset(it.value.counterpartyAssetName, it.value.mastercoinAssetName, it.value.nativeAssetName, it.value.counterpartyAddress, it.value.mastercoinAddress, it.value.nativeAddressCounterparty , it.value.nativeAddressMastercoin, it.value.counterpartyToMastercoinAddress,it.value.mastercoinToCounterpartyAddress, it.value.txFee, it.value.feePercentage, it.value.mappingRequired, issuanceDependent, issuanceSource, issuanceAsset, issuanceDivisible, issuanceDescription, it.value.reserveFundAddresses, it.value.valueInUSD)
             assetConfig.add(currentAsset)
         }
 		

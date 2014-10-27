@@ -56,7 +56,7 @@ class MastercoinAPI {
             }
 
  	    response.failure = { resp -> 
-			log4j.info(command + " failed") 
+			log4j.info(command + " failed: ${response.statusLine}") 
 			assert resp.responseBase == null
 	    }
 
@@ -99,17 +99,9 @@ class MastercoinAPI {
 		return sendRPCMessage('signrawtransaction', [unsignedTransaction])
 	}
 
-	// Recall asset is integer in mastercoin (ammont in floating point, not willet)
-    public sendAsset(sourceAddress, destinationAddress, asset, amount, testMode) {
-        def myParams
-
-        if (testMode == false) {
-            myParams = [sourceAddress, destinationAddress, Long.parseLong(asset, 10), amount]
-        }
-        else {
-			myParams = ['12nY87y6qf4Efw5WZaTwgGeceXApRYAwC7', '142UYTzD1PLBcSsww7JxKLck871zRYG5D3', Long.parseLong(asset, 10), 20000]
-        }		
-		return sendRPCMessage('send_MP', myParams)
+	// Recall asset is integer in mastercoin (amount in floating point, not Willets)
+    public sendAsset(sourceAddress, destinationAddress, asset, amount) {
+		return sendRPCMessage('send_MP', [sourceAddress, destinationAddress, Long.parseLong(asset, 10), amount]	)
     }
 
 // TODO - not supported	

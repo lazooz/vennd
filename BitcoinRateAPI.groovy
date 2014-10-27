@@ -71,6 +71,21 @@ class BitcoinRateAPI {
 		def result = bitcoinRateAPI.getAveragedRate()
 		println "Average: ${result}"
 		
+		// every 20 secs
+		def exchangeRateUpdateRate = 5 *  1000
+		
+		Timer timer = new Timer()
+		timer.scheduleAtFixedRate(new BTCUSDRateUpdateTask(), exchangeRateUpdateRate, exchangeRateUpdateRate)
+		
 		return 0
+	}
+	
+	
+	static class BTCUSDRateUpdateTask extends TimerTask { 
+		public void run() {
+			def bitcoinRateAPI = new BitcoinRateAPI()
+			def currentBTCValueInUSD = bitcoinRateAPI.getAveragedRate()
+			println "Updated exchange rate is: ${currentBTCValueInUSD} USD for 1 BTC"
+		}
 	}
 }

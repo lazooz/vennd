@@ -38,7 +38,7 @@ class ApplicationPaymentProcessor {
 
         // Set up some log4j stuff
         logger = new Logger()
-        PropertyConfigurator.configure("PaymentProcessor_log4j.properties")
+        PropertyConfigurator.configure("ApplicationPaymentProcessor_log4j.properties")
         log4j = logger.getRootLogger()
         log4j.setLevel(Level.INFO)
 		
@@ -149,14 +149,14 @@ class ApplicationPaymentProcessor {
 		def amount = transaction.zooz * satoshi
 		def success = true
 				       
-        log4j.info("Processing payment in ${code} Sending ${outAmount} ${outAsset} from ${sourceAddress} to ${destinationAddress}")
+        log4j.info("Processing payment in ${code} Sending ${amount} ${outAsset} from ${sourceAddress} to ${destinationAddress}")
 
         bitcoinAPI.lockBitcoinWallet() // Lock first to ensure the unlock doesn't fail
         bitcoinAPI.unlockBitcoinWallet(walletPassphrase, 30)
 
 		if (type == Asset.COUNTERPARTY_TYPE) {
 			// Create the (unsigned) counterparty send transaction
-			def unsignedTransaction = counterpartyAPI.createSend(sourceAddress, destinationAddress, asset, amount)
+			def unsignedTransaction = counterpartyAPI.createSend(sourceAddress, destinationAddress, outAsset, amount)
 			assert unsignedTransaction instanceof java.lang.String
 			assert unsignedTransaction != null
 			if (!(unsignedTransaction instanceof java.lang.String)) { // catch non technical error in RPC call
@@ -181,7 +181,7 @@ class ApplicationPaymentProcessor {
 		} else {
 			// send transaction
 			try {
-				mastercoinAPI.sendAsset(sourceAddress, destinationAddress, asset, amount/satoshi)
+				mastercoinAPI.sendAsset(sourceAddress, destinationAddress, outAsset, amount/satoshi)
 				updateStatus(code, transaction, 'complete')				
 				success = true
 			}
